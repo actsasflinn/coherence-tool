@@ -21,14 +21,14 @@ untar/unzip to your preferred location (mine is /usr/local/libcoherence)
 Usage
 -----
 
-    coherence-tool <cache-name> get <key1> [key2] ...
-    coherence-tool <cache-name> mget
-    coherence-tool <cache-name> put <key> <value>
-    coherence-tool <cache-name> mput <key1> <value1> [<key2> <value2>] ...
-    coherence-tool <cache-name> delete <key> [key2] ...
-    coherence-tool <cache-name> size
-    coherence-tool <cache-name> keys
-    coherence-tool <cache-name> values
-    coherence-tool <cache-name> key_exists <key>
-    coherence-tool <cache-name> value_exists <value>
-    coherence-tool <cache-name> clear
+    ./run.sh <cache-name> get <key1> [key2] ...
+    ./run.sh <cache-name> mget
+    ./run.sh <cache-name> put <key> <value>
+    ./run.sh <cache-name> mput <key1> <value1> [<key2> <value2>] ...
+    ./run.sh <cache-name> delete <key> [key2] ...
+    ./run.sh <cache-name> size
+    ./run.sh <cache-name> keys
+    ./run.sh <cache-name> values
+    ./run.sh <cache-name> key_exists <key>
+    ./run.sh <cache-name> value_exists <value>
+    ./run.sh <cache-name> clear
