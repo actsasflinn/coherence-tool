@@ -14,6 +14,7 @@ else
   echo "unsupported platform"
 fi
 
+TangosolCoherenceCacheconfig=config/coherence-cache-config.xml
 TangosolCoherenceLogLevel=1
 TangosolCoherenceLog=stderr
 

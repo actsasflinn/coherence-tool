@@ -8,4 +8,4 @@ INCLUDE_PATH=$COHERENCE_PATH/include
 LIBRARY_OPTIONS="-lcoherence -L${LIBRARY_PATH}"
 INCLUDE_OPTIONS="-I${INCLUDE_PATH}"
 
-$CC $CC_OPTIONS $LIBRARY_OPTIONS $INCLUDE_OPTIONS coherence-tool.cpp -o coherence-tool
+$CC $CC_OPTIONS $LIBRARY_OPTIONS $INCLUDE_OPTIONS src/coherence-tool.cpp -o bin/coherence-tool
