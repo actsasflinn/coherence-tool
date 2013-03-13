@@ -1,9 +1,9 @@
 #!/bin/bash
 
-export COHERENCE_PATH="/usr/local/libcoherence"
-export LIBRARY_PATH=$COHERENCE_PATH/lib/
+COHERENCE_PATH="/usr/local/libcoherence"
+LIBRARY_PATH=$COHERENCE_PATH/lib/
 
-export OS=$(uname -s)
+OS=$(uname -s)
 if [[ $OS == "Darwin" ]] ; then
   export DYLD_LIBRARY_PATH=$LIBRARY_PATH:$DYLD_LIBRARY_PATH
 elif [[ $OS == "Linux" ]] ; then
@@ -14,8 +14,17 @@ else
   echo "unsupported platform"
 fi
 
-export TangosolCoherenceCacheconfig=config/coherence-cache-config.xml
 export TangosolCoherenceLogLevel=1
 export TangosolCoherenceLog=stderr
 
-bin/coherence-tool $*
+# There is likely a better way to do this.
+args=($@)
+if [[ $1 == "-c" ]] ; then
+  CONFIG=$2
+  args=(${args[@]:2})
+else
+  CONFIG=config/coherence-cache-config.xml
+fi
+export TangosolCoherenceCacheconfig=$CONFIG
+
+bin/coherence-tool ${args[*]}
