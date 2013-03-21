@@ -1,0 +1,9 @@
+*.tlog
+*.manifest
+*.lastbuildstate
+*.unsuccessfulbuild
+*.lib
+*.log
+*.pdb
+*.exp
+*.obj
