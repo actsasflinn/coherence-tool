@@ -30,16 +30,36 @@ int main(int argc, char** argv) {
 
   try {
     if (argc > 2) {
-      // Get the named cache
-      String::View vsCacheName = argv[1];
-      NamedCache::Handle hCache = CacheFactory::getCache(vsCacheName);
+      String::View vsCacheName;
+      NamedCache::Handle hCache;
+      std::string cmd;
+      int startArg = 3;
 
-      // process the command...
-      std::string cmd = argv[2];
+      if ("-s" == (std::string) argv[1]) {
+        // Get the service
+        String::View vsServiceName = argv[2];
+        coherence::net::CacheService::Handle svc = cast<coherence::net::CacheService::Handle>(CacheFactory::getService(vsServiceName));
+
+        // Get the named cache
+        vsCacheName = argv[3];
+        hCache = svc->ensureCache(vsCacheName);
+
+        // process the command...
+        cmd = argv[4];
+
+        startArg = 5;
+      } else {
+        // Get the named cache
+        vsCacheName = argv[1];
+        hCache = CacheFactory::getCache(vsCacheName);
+
+        // process the command...
+        cmd = argv[2];
+      }
 
       // Get
       if (cmd == "get") {
-        for(int i = 3;i < argc;i++) {
+        for(int i = startArg;i < argc;i++) {
           String::View vsKey = argv[i];
           String::View vsValue = cast<String::View>(hCache->get(vsKey));
           std::cout << vsValue << std::endl;
@@ -57,8 +77,8 @@ int main(int argc, char** argv) {
 
       // Put
       } else if (cmd == "put") {
-        String::View vsKey = argv[3];
-        String::View vsValue = argv[4];
+        String::View vsKey = argv[startArg];
+        String::View vsValue = argv[startArg+1];
         std::cout << hCache->put(vsKey, vsValue) << std::endl;
 
       // Put All
@@ -68,7 +88,7 @@ int main(int argc, char** argv) {
         StringStringMap::Handle hMap =
           StringStringMap::create(HashMap::create());
 
-        for(int i = 3;i<argc;i+=2) {
+        for(int i = startArg;i<argc;i+=2) {
           String::View vsKey = argv[i];
           String::View vsValue = argv[i+1];
           hMap->put(vsKey, vsValue);
@@ -77,7 +97,7 @@ int main(int argc, char** argv) {
 
       // Delete
       } else if (cmd == "delete") {
-        for(int i = 3;i < argc;i++) {
+        for(int i = startArg;i < argc;i++) {
           String::View vsKey = argv[i];
           String::View vsValue = cast<String::View>(hCache->remove(vsKey));
           std::cout << vsValue << std::endl;
@@ -106,13 +126,13 @@ int main(int argc, char** argv) {
 
       // Keys
       } else if (cmd == "key_exists") {
-        String::View vsKey = argv[3];
+        String::View vsKey = argv[startArg];
         res = hCache->containsKey(vsKey);
         std::cout << res << std::endl;
 
       // Value
       } else if (cmd == "value_exists") {
-        String::View vsValue = argv[3];
+        String::View vsValue = argv[startArg];
         res = hCache->containsValue(vsValue);
         std::cout << res << std::endl;
 

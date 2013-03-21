@@ -1,4 +1,4 @@
-COHERENCE_PATH="/usr/local/libcoherence"
+COHERENCE_PATH="coherence-cpp"
 ARCH=64
 
 CC="g++"

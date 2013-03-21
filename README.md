@@ -11,21 +11,20 @@ Linux/Solaris/Mac OS X Setup
 ----------------------------
 
 Download the Oracle Coherence C++ libraries from OTN
-untar/unzip to your preferred location (mine is /usr/local/libcoherence)
+untar/unzip and copy the "coherence-cpp" into this directory
 
-1. Edit the build.sh file and specify your COHERENCE_PATH variable to where ever you untarred/unzipped the OTN libraries and specify your ARCH variable as 32 or 64
-2. Edit the run.sh file and specify your COHERENCE_PATH variable to where ever you untarred/unzipped the OTN libraries
-3. ./build.sh
-4. Configure your config/coherence-cache-config.xml file for your environment
-5. See usage
+1. Edit the build.sh file and specify your ARCH variable as "32" if needed (default is set to 64)
+2. ./build.sh
+3. Configure your config/coherence-cache-config.xml file for your environment
+4. See usage
 
 Windows Setup
 -------------
 
 Download the Oracle Coherence C++ libraries from OTN
-unzip and copy the coherence-cpp directory into the project folder
+unzip and copy the "coherence-cpp" directory into this directory
 
-1. Open the solution file and update the VC++ directories to point to your coherence-cpp directories
+1. Open the solution file and update the VC++ directories to point to the "coherence-cpp" directory
 2. Build the solution
 3. Configure your config/coherence-cache-config.xml file for your environment
 4. See usage
@@ -33,26 +32,42 @@ unzip and copy the coherence-cpp directory into the project folder
 Usage
 -----
 
-    ./run.sh [-c <config-file>] <cache-name> get <key1> [key2] ...
-    ./run.sh [-c <config-file>] <cache-name> mget
-    ./run.sh [-c <config-file>] <cache-name> put <key> <value>
-    ./run.sh [-c <config-file>] <cache-name> mput <key1> <value1> [<key2> <value2>] ...
-    ./run.sh [-c <config-file>] <cache-name> delete <key> [key2] ...
-    ./run.sh [-c <config-file>] <cache-name> size
-    ./run.sh [-c <config-file>] <cache-name> keys
-    ./run.sh [-c <config-file>] <cache-name> values
-    ./run.sh [-c <config-file>] <cache-name> key_exists <key>
-    ./run.sh [-c <config-file>] <cache-name> value_exists <value>
-    ./run.sh [-c <config-file>] <cache-name> clear
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> get <key1> [key2] ...
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> mget
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> put <key> <value>
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> mput <key1> <value1> [<key2> <value2>] ...
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> delete <key> [key2] ...
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> size
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> keys
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> values
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> key_exists <key>
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> value_exists <value>
+    ./run.sh [-c <config-file>] [-s service-name] <cache-name> clear
 
 Examples
 --------
 
-    # Use a config file at config/dev.xml
-    ./run.sh -c config/dev.xml dist-example put foo bar
-    # NULL
-
     # Using the default config file at config/coherence-cache-config.xml
+    ./run.sh dist-example get foo
+    # <result>
+
+    # Use a specific config file at config/testing.xml (Unix only at the moment)
+    ./run.sh -c config/testing.xml dist-example get foo
+    # <result>
+
+    # Use a specific service (production)
+    # This allows you to enter multiple cache clusters in one config
+    ./run.sh -s production dist-example put foo bar
+    # <result>
+
+    # Use a specific service (development)
+    # This allows you to enter multiple cache clusters in one config
+    ./run.sh -s development dist-example get foo
+    # <result>
+
+    # Clear the cache
+    ./run.sh dist-example clear
+
     ./run.sh dist-example put foo bar
     # NULL
 

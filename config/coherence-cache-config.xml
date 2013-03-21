@@ -1,19 +1,92 @@
 <?xml version="1.0"?>
 <!DOCTYPE cache-config SYSTEM "cache-config.dtd">
+
 <cache-config>
   <defaults>
     <serializer>pof</serializer>
   </defaults>
+
   <caching-scheme-mapping>
+    <!-- Local Cache Example -->
     <cache-mapping>
-      <cache-name>dist-*</cache-name>
-      <scheme-name>extend-dist</scheme-name>
+      <cache-name>local-*</cache-name>
+      <scheme-name>local-example</scheme-name>
+    </cache-mapping>
+
+    <!-- Near Cache Example -->
+    <cache-mapping>
+      <cache-name>near-*</cache-name>
+      <scheme-name>near-example</scheme-name>
+    </cache-mapping>
+
+    <!-- Distributed Cache Example -->
+    <cache-mapping>
+      <cache-name>*</cache-name>
+      <scheme-name>dist-example</scheme-name>
     </cache-mapping>
   </caching-scheme-mapping>
+
   <caching-schemes>
+    <!-- A local scheme which is used for both the Local Cache and the Near Cache -->
+    <local-scheme>
+      <scheme-name>local-example</scheme-name>
+      <service-name>testing</service-name>
+      <!-- these next options don't make sense for a command line util like
+           this one, but you can use them for testing configs, etc. -->
+      <high-units>100</high-units>
+      <low-units>95</low-units>
+      <expiry-delay>15m</expiry-delay>
+    </local-scheme>
+
+    <!-- A near scheme which is used for both the Near Cache utilizing the Local Scheme by reference for the "front cache" and a Remote Scheme by reference for the "back cache" -->
+    <near-scheme>
+      <scheme-name>near-example</scheme-name>
+
+      <front-scheme>
+        <local-scheme>
+          <scheme-ref>local-example</scheme-ref>
+          <!-- instead of referencing another local scheme here by scheme-ref you can define the scheme options here
+          <high-units>100</high-units>
+          <low-units>95</low-units>
+          <expiry-delay>15m</expiry-delay>
+          -->
+        </local-scheme>
+      </front-scheme>
+
+      <back-scheme>
+        <remote-cache-scheme>
+          <scheme-ref>dist-example</scheme-ref>
+          <!-- instead of referencing another local scheme here by scheme-ref you can define the scheme options here
+          <scheme-name>dist-example</scheme-name>
+          <service-name>production</service-name>
+          <initiator-config>
+            <tcp-initiator>
+              <remote-addresses>
+                <socket-address>
+                  <address system-property="tangosol.coherence.proxy.address">localhost</address>
+                  <port system-property="tangosol.coherence.proxy.port">9099</port>
+                </socket-address>
+              </remote-addresses>
+              <connect-timeout>500ms</connect-timeout>
+            </tcp-initiator>
+            <outgoing-message-handler>
+              <request-timeout>5s</request-timeout>
+            </outgoing-message-handler>
+          </initiator-config>
+          -->
+        </remote-cache-scheme>
+      </back-scheme>
+
+      <!-- Specify a near cache strategy.
+           Since this command line util closes its connection after a command,
+           there's no sense in an invalidation strategy greater than "none" -->
+      <invalidation-strategy>none</invalidation-strategy>
+    </near-scheme>
+
+    <!-- Specify one or more remote cache schemes -->
     <remote-cache-scheme>
-      <scheme-name>extend-dist</scheme-name>
-      <service-name>ExtendTcpCacheService</service-name>
+      <scheme-name>dist-example</scheme-name>
+      <service-name>production</service-name>
       <initiator-config>
         <tcp-initiator>
           <remote-addresses>
@@ -22,7 +95,28 @@
               <port system-property="tangosol.coherence.proxy.port">9099</port>
             </socket-address>
           </remote-addresses>
-          <connect-timeout>1s</connect-timeout>
+          <connect-timeout>500ms</connect-timeout>
+        </tcp-initiator>
+        <outgoing-message-handler>
+          <request-timeout>5s</request-timeout>
+        </outgoing-message-handler>
+      </initiator-config>
+    </remote-cache-scheme>
+
+    <!-- if you have more than one remote scheme sharing a scheme-name,
+         make sure to pass the -s <service-name> option when running the tool -->
+    <remote-cache-scheme>
+      <scheme-name>dist-example</scheme-name>
+      <service-name>development</service-name>
+      <initiator-config>
+        <tcp-initiator>
+          <remote-addresses>
+            <socket-address>
+              <address system-property="tangosol.coherence.proxy.address">localhost</address>
+              <port system-property="tangosol.coherence.proxy.port">9098</port>
+            </socket-address>
+          </remote-addresses>
+          <connect-timeout>500ms</connect-timeout>
         </tcp-initiator>
         <outgoing-message-handler>
           <request-timeout>5s</request-timeout>

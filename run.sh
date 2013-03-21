@@ -1,6 +1,6 @@
 #!/bin/bash
 
-COHERENCE_PATH="/usr/local/libcoherence"
+COHERENCE_PATH="coherence-cpp"
 LIBRARY_PATH=$COHERENCE_PATH/lib/
 
 OS=$(uname -s)
